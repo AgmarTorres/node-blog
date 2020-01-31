@@ -5,7 +5,6 @@ const router = express.Router()
         res.send("Pagina inicial router")
     })
 
-
     router.get('/', (req,res)=>{
         res.send("Pagina    ")
     })
