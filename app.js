@@ -24,9 +24,9 @@ const flash = require('connect-flash')
             resave: true,
             saveUninitialized: true
         }))
-
+        app.use(flash())
         app.use((req, res, next) =>{
-            res.locals.sucess_msg = req.flash("success_msg")
+            res.locals.success_msg = req.flash("success_msg")
             res.locals.error_msg = req.flash("error_msg")
             next();
         })
@@ -39,10 +39,11 @@ const flash = require('connect-flash')
     )
 //Middlewares
 
-    app.use((req, res, next)=>{
+    /*app.use((req, res, next)=>{
         console.log("Oi eu sou um middleware")
+        
     })
-
+*/
 //Rotas
     app.use(express.static(path.join(__dirname, "public")))
     app.use('/admin', admin)
