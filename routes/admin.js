@@ -17,7 +17,11 @@ const Categoria = mongoose.model("Categoria")
     })
 
     router.get('/categorias', (req,res)=>{
-        res.render("admin/categorias")
+        Categoria.find().sort({date:'asc'}).then((categorias) =>{
+            res.render("admin/categorias", {categorias: categorias})
+        }).catch((err)=>{
+            req.flash("error_msg", "Houve um erro ao lista as categorias")
+        })
     })
     
     router.get('/addcategorias', (req,res)=>{

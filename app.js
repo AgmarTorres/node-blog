@@ -32,7 +32,7 @@ const flash = require('connect-flash')
         })
 //Banco de Dados
     //mongoose.Promise = global.Promesi;
-    mongoose.connect('mongodb://localhost/blogapp',).then(
+    mongoose.connect('mongodb://localhost/blogapp', {useNewUrlParser:true}).then(
         ()=>console.log("Conectado com sucesso ao Mongo")
     ).catch(
         (err) => console.log ("Não pode ser devido a " + err)
