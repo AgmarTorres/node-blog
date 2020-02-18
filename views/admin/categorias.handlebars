@@ -7,10 +7,17 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h2>{{nome}} </h2>
-                <small>{{date}}</small>
-            </div>
+                <h4>Slug: {{slug}}</h4>
+                <small>{{date}}</small> <br><br>
+                <a href="/admin/categorias/edit/{{id}}" ><button class="btn btn-success mt-4">Editar Categoria</button></a>
+               
+                <form action='/admin/categorias/deletar' method="POST">
+                    <input type="hidden" name="id" value="{{_id}}" />
+                    <button type="submit" class="btn btn-danger mt-3" >DELETAR</button>
+                </form>
+             </div>
         </div>
     </div>
 {{else}}
-
+<h4>Sem nenhuma categoria</h4>
 {{/each}}
