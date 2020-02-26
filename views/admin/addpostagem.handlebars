@@ -1,7 +1,7 @@
 <div class = "card">
     <div class = "card-body">
         <h4> Nova Postagem</h4>
-        <form action = "" >
+        <form action = "/admin/postangens/nova" method="POST">
 
             <label for = "titulo" > Título</label>
             <input type ="text" name = "titulo" class="form-control" />
@@ -16,7 +16,7 @@
             <textarea type ="text" name = "conteudo" class="form-control"> </textarea>
 
             <label class="mt-4" > Categoria</label>
-            <select>
+            <select name="categoria" class = "custom-select">
                 {{#each categorias}}
                         <option value="{{_id}}">{{nome}}</option>
 
@@ -29,3 +29,5 @@
         </form>
     </div>
 </div>
+
+
