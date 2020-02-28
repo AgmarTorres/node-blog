@@ -28,7 +28,6 @@ const Postagem = ({
         type: Date,
         default: Date.now()
     }
-
 })
 
 mongoose.model("Postagem", Postagem) //criar um colection postagens que vai ser feita com base no model de postagens

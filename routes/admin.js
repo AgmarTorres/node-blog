@@ -104,7 +104,13 @@ const Postagem = mongoose.model("Postagem")
     
 
     router.get('/postagens', (req, res)=> {
-        res.render("admin/postagem")
+        Postagem.find().populate("categorias").sort({data: "desc"})
+        .then((postagens)=> {
+            res.render("admin/postagem", {postagens: postagens})
+        }).catch((err) =>{
+            req.flash("error_msg", "Houve um erro ao carregar as postagens" + err)
+            res.redirect("/admin")
+        })
     })
 
     router.get("/postagens/add", (req, res)=>{
