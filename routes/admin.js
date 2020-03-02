@@ -150,4 +150,50 @@ const Postagem = mongoose.model("Postagem")
         }
     })
 
+    router.get("/postagens/edit/:id", (req, res) =>{
+	
+		Postagem.findOne({_id: req.params.id}).then((postagem)=>{
+			Categoria.find().then( (categorias) => {
+				res.render("admin/editpostagens", {categorias: categorias, postagem: postagem})
+                
+			
+			}).catch((err) => {
+				req.flash("error_msg", "Houve um erro ao recuperar a categoria")
+				res.redirect("/admin/postagens")
+			})
+		
+		}).catch((err) =>{
+			req.flash("error_msg", "Houve um erro ao carregar o formulario de ediçao")
+			res.redirect("/admin/postagens")
+		})
+	})
+	
+    router.post( "/postagem/edit", (req,res) =>{
+		
+		Postagem.findOne({_id: req.body.id}).then(( postagem) => {
+			
+			postagem.titulo = req.body.titulo
+			postagem.slug = req.body.slug
+			postagem.descricao = req.body.descricao
+			postagem.conteudo = req.body.conteudo
+			postagem.categoria = req.body.categoria
+			
+			postagem.save().then(() => {
+				req.flash("success_msg", "Postagem alterada com sucesso!")
+				res.redirect("/admin/postagens")
+			
+			}).catch((err) =>{
+				req.flash("error_msg","Houve um erro ao alterar a postagem")
+				res.redirect("/admin/postagens")
+			})
+		}).catch((err) => {
+			req.flash("error_msg", "Houve um erro ao salvar a edição ")
+			
+			res.redirect("/admin/postagens")
+		
+		})
+	
+	})
+
+
     module.exports = router
