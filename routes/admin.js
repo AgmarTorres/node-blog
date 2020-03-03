@@ -196,4 +196,15 @@ const Postagem = mongoose.model("Postagem")
 	})
 
 
+    router.post('/postagem/deletar',(req,res)=>{
+        Postagem.deleteOne({_id: req.body.id})
+        .then(()=>{
+            req.flash("success_msg", "Postagem excluída com sucesso")
+            res.redirect("/admin/postagens")
+        }).catch((err)=>{
+            req.flash("error_msg", "Houve um erro ao tentar a categoria")
+            res.redirect("/admin/postagens")
+        })
+    })
+
     module.exports = router
