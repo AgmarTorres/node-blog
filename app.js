@@ -1,4 +1,3 @@
-
 //Modulos
 const express  = require('express');
 const bodyParser = require('body-parser')
@@ -8,6 +7,9 @@ const path = require('path')
 const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
+require('./models/Postagem')
+	
+	const Postagem = mongoose.model("Postagem")
 
 //Configuracoes
     const app = express()
@@ -17,8 +19,9 @@ const flash = require('connect-flash')
 
     app.engine('handlebars', handlebars({defaultLayout: 'main'}))
     app.set('view engine', 'handlebars')
+
 //Configurações
-    //Sessão
+//Sessão
         app.use(session({
             secret: 'cursodenode',
             resave: true,
@@ -30,6 +33,7 @@ const flash = require('connect-flash')
             res.locals.error_msg = req.flash("error_msg")
             next();
         })
+
 //Banco de Dados
     //mongoose.Promise = global.Promesi;
     mongoose.connect('mongodb://localhost/blogapp', {useNewUrlParser:true}).then(
@@ -37,21 +41,29 @@ const flash = require('connect-flash')
     ).catch(
         (err) => console.log ("Não pode ser devido a " + err)
     )
+
 //Middlewares
 
-    /*app.use((req, res, next)=>{
-        console.log("Oi eu sou um middleware")
-        
-    })
-*/
+  
 //Rotas
     app.use(express.static(path.join(__dirname, "public")))
     app.use('/admin', admin)
 
-    app.get('/', (req, res)=>{
-        res.render('admin/categorias')
-    })
+    app.get('/', (req,res) => {
+        Postagem.find().populate("categorias").sort({ data: "desc" }).then((postagens) => {
 
+            res.render("admin/index", { postagens: postagens })
+
+        }).catch( err => {
+            req.flash( "error_msg", "Houve um erro interno")
+            res.redirect("/404")
+        })
+    })
+    
+    app.get("/404", (req, res) =>{
+		res.send('Erro 404')
+		
+	})
 //Servidor
 
 const porta = 8081
