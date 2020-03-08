@@ -8,24 +8,23 @@
     </p>
 </div>
 
-</hr>
-	
-<h2> Postanges recentes </h2>
-
-
 <a href="admin/categorias"><button class = "btn btn-success"> teste</button></a>
 
-
-	<h2> Postagens recentes:  </h2>
+<h2> Postagens recentes:  </h2>
 	
 {{#each postagens}}
 	
 	<div class = "card">
 		<div class = "card-body">
-			<h3> 
-				{{titulo}}
-			</h3>
+			 
+			<h1>{{titulo}}</h1>
 			<p> {{descricao}} </p>
+			<a href="/postagem/{{slug}}"><button class="btn btn-success"> Ler mais</button></a>
+			<hr>
+			<small>Categoria: {{ categoria.nome }}</small>
+			<br>
+			<small>{{data}}</small>
+
 		</div>
 	</div>
 	{{ else }}
