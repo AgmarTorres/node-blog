@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const handlebars = require("express-handlebars");
 const admin = require("./routes/admin.js");
+const usuarios = require("./routes/usuarios.js");
 const path = require("path");
 const mongoose = require("mongoose");
 const session = require("express-session");
@@ -52,6 +53,7 @@ mongoose
 //Rotas
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/admin", admin);
+app.use("/usuarios", usuarios);
 
 app.get("/", (req, res) => {
   Postagem.find()
