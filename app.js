@@ -119,6 +119,11 @@ app.get("/categorias/:slug", (req, res) =>{
   })
 })
 
+
+
+app.get("/login", (req, res ) =>{
+  res.render("usuario/login")
+})
 //Servidor
 
 const porta = 8081;
