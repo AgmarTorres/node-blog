@@ -15,6 +15,9 @@ const Postagem = mongoose.model("Postagem");
 require("./models/Categoria")
 const Categoria = mongoose.model("Categoria")
 
+const passport = require("passport")
+require("./config/auth")(passport)
+
 
 //Configuracoes
 const app = express();
@@ -34,6 +37,11 @@ app.use(
     saveUninitialized: true
   })
 );
+
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+
 app.use(flash());
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
