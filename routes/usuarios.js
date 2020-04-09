@@ -1,19 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-
 const passport = require("passport");
 
 require("../models/Usuario");
-
-const Usuario = mongoose.model("Usuario");
-
-router.use("/registro", (req, res) => {
-  res.render("usuario/registro");
+const Usuario = mongoose.model("usuarios");
+const bcrypt = require("bcryptjs");
+router.get("/registro", (req, res) => {
+  res.render("usuarios/registro");
 });
 
 router.post("/registros", (req, res) => {
-  console.log("teste");
   let erros = [];
 
   if (
@@ -45,17 +42,63 @@ router.post("/registros", (req, res) => {
   }
 
   if (erros.length > 0) {
-    res.render("usuario/registro", { erros: erros });
+    res.render("usuarios/registro", { erros: erros });
   } else {
+    Usuario.findOne({ email: req.body.email })
+      .then((usuario) => {
+        if (usuario) {
+          req.flash("error_msg", "Já existe uma conta");
+          res.redirect("/usuarios/registro");
+        } else {
+          const novoUsuario = new Usuario({
+            nome: req.body.nome,
+            email: req.body.email,
+            senha: req.body.senha,
+          });
+
+          bcrypt.genSalt(10, (erro, salt) => {
+            bcrypt.hash(novoUsuario.senha, salt, (erro, hash) => {
+              if (erro) {
+                req.flash(
+                  "error_msg",
+                  "Houve um erro durante o salvamento do usuário"
+                );
+                res.redirect("/");
+              }
+              novoUsuario.senha = hash;
+              novoUsuario
+                .save()
+                .then(() => {
+                  req.flash("success_msg", "Usuario cadastrado com sucesso");
+                  res.redirect("/usuarios/registro");
+                })
+                .catch((err) => {
+                  req.flash(
+                    "error_msg",
+                    "Houve um erro ao criar o usuário, tente novamente"
+                  );
+                });
+            });
+          });
+        }
+      })
+      .catch((err) => {
+        req.flash("error_msg", "Houve um erro interno");
+        res.redirect("/");
+      });
   }
 });
+
+router.get('/login', ( req, res) =>{
+  res.render("usuarios/login")
+})
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/usuarios/login",
-    failureFlash: true
-  })(res, req, next);
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
 });
 
 module.exports = router;

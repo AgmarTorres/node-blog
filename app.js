@@ -12,12 +12,11 @@ const flash = require("connect-flash");
 require("./models/Postagem");
 const Postagem = mongoose.model("Postagem");
 
-require("./models/Categoria")
-const Categoria = mongoose.model("Categoria")
+require("./models/Categoria");
+const Categoria = mongoose.model("Categoria");
 
-const passport = require("passport")
-require("./config/auth")(passport)
-
+const passport = require("passport");
+require("./config/auth")(passport);
 
 //Configuracoes
 const app = express();
@@ -34,18 +33,18 @@ app.use(
   session({
     secret: "cursodenode",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(flash())
-
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
+
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
   next();
 });
 
@@ -54,7 +53,7 @@ app.use((req, res, next) => {
 mongoose
   .connect("mongodb://localhost/blogapp", { useNewUrlParser: true })
   .then(() => console.log("Conectado com sucesso ao Mongo"))
-  .catch(err => console.log("Não pode ser devido a " + err));
+  .catch((err) => console.log("Não pode ser devido a " + err));
 
 //Middlewares
 
@@ -67,10 +66,10 @@ app.get("/", (req, res) => {
   Postagem.find()
     .populate("categorias")
     .sort({ data: "desc" })
-    .then(postagens => {
+    .then((postagens) => {
       res.render("admin/index", { postagens: postagens });
     })
-    .catch(err => {
+    .catch((err) => {
       req.flash("error_msg", "Houve um erro interno");
       res.redirect("/404");
     });
@@ -82,7 +81,7 @@ app.get("/404", (req, res) => {
 
 app.get("/postagem/:slug", (req, res) => {
   Postagem.findOne({ slug: req.params.slug })
-    .then(postagem => {
+    .then((postagem) => {
       if (postagem) {
         res.render("postagem/index", { postagem: postagem });
       } else {
@@ -90,48 +89,55 @@ app.get("/postagem/:slug", (req, res) => {
         res.redirect("/");
       }
     })
-    .catch(error => {
+    .catch((error) => {
       req.flash("msg_error", "Houve um erro para carregar essa postagem");
       res.redirect("/");
     });
 });
 
 app.get("/categorias", (req, res) => {
-  Categoria.find().then(categorias =>{
-    res.render("categorias/index", { categorias: categorias})
-    
-  }).catch(error =>{
-    req.flash("error_msg", " Houve um erro interno ao lsitas as categorias")
-    res.redirect("/")
-  })
-})
+  Categoria.find()
+    .then((categorias) => {
+      res.render("categorias/index", { categorias: categorias });
+    })
+    .catch((error) => {
+      req.flash("error_msg", " Houve um erro interno ao lsitas as categorias");
+      res.redirect("/");
+    });
+});
 
-app.get("/categorias/:slug", (req, res) =>{
-  Categoria.findOne({ slug: req.params.slug }).then(categoria =>{
-    if(categoria){
-      Postagem.find({ categoria: categoria._id}).then( postagem =>{
-        res.render("categorias/postagens", { postagens: postagem, categoria: categoria })
-        
-      }).catch(error => {
-        req.flash("error_msg", "Houve um erro ao encontrar as postagens")
-        res.redirect("/")
-      }) // pesquisar os posts quem tem essa categoria
-      
-    }else{
-      req.flash("error_msg", "Essa categoria nao existe")
-      res.redirect("/")
-    }
-  }).catch( (error) => {
-    req.flash("error_msg", "Houve um erro interno ao recarregar a pagina dessa categoria")
-    res.redirect("/")
-  })
-})
+app.get("/categorias/:slug", (req, res) => {
+  Categoria.findOne({ slug: req.params.slug })
+    .then((categoria) => {
+      if (categoria) {
+        Postagem.find({ categoria: categoria._id })
+          .then((postagem) => {
+            res.render("categorias/postagens", {
+              postagens: postagem,
+              categoria: categoria,
+            });
+          })
+          .catch((error) => {
+            req.flash("error_msg", "Houve um erro ao encontrar as postagens");
+            res.redirect("/");
+          }); // pesquisar os posts quem tem essa categoria
+      } else {
+        req.flash("error_msg", "Essa categoria nao existe");
+        res.redirect("/");
+      }
+    })
+    .catch((error) => {
+      req.flash(
+        "error_msg",
+        "Houve um erro interno ao recarregar a pagina dessa categoria"
+      );
+      res.redirect("/");
+    });
+});
 
-
-
-app.get("/login", (req, res ) =>{
-  res.render("usuario/login")
-})
+app.get("/login", (req, res) => {
+  res.render("usuarios/login");
+});
 //Servidor
 
 const porta = 8081;
