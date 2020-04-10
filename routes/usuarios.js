@@ -3,14 +3,17 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+const { eAdmin } = require("../helpers/eadmin");
+
 require("../models/Usuario");
 const Usuario = mongoose.model("usuarios");
 const bcrypt = require("bcryptjs");
-router.get("/registro", (req, res) => {
+
+router.get("/registro",eAdmin, (req, res) => {
   res.render("usuarios/registro");
 });
 
-router.post("/registros", (req, res) => {
+router.post("/registros",eAdmin, (req, res) => {
   let erros = [];
 
   if (
@@ -54,6 +57,7 @@ router.post("/registros", (req, res) => {
             nome: req.body.nome,
             email: req.body.email,
             senha: req.body.senha,
+            //eAdmin: 1
           });
 
           bcrypt.genSalt(10, (erro, salt) => {
