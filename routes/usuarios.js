@@ -9,11 +9,11 @@ require("../models/Usuario");
 const Usuario = mongoose.model("usuarios");
 const bcrypt = require("bcryptjs");
 
-router.get("/registro",eAdmin, (req, res) => {
+router.get("/registro", eAdmin, (req, res) => {
   res.render("usuarios/registro");
 });
 
-router.post("/registros",eAdmin, (req, res) => {
+router.post("/registros", eAdmin, (req, res) => {
   let erros = [];
 
   if (
@@ -93,9 +93,9 @@ router.post("/registros",eAdmin, (req, res) => {
   }
 });
 
-router.get('/login', ( req, res) =>{
-  res.render("usuarios/login")
-})
+router.get("/login", (req, res) => {
+  res.render("usuarios/login");
+});
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("local", {
@@ -103,6 +103,12 @@ router.post("/login", (req, res, next) => {
     failureRedirect: "/login",
     failureFlash: true,
   })(req, res, next);
+});
+
+router.get("/logout", (req, res) => {
+  req.logout();
+  req.flash("msg_success", "Usuário desconectado com sucesso");
+  res.redirect("/");
 });
 
 module.exports = router;
