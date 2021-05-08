@@ -8,7 +8,7 @@
     "express-redirect": "^1.2.2",
     "express-router": "0.0.1",
     "express-session": "^1.17.0",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.7",
     "mongoose": "^5.9.1",
     "nodemon": "^2.0.3",
     "passport": "^0.4.1",
