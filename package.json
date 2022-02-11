@@ -4,7 +4,7 @@
     "connect-flash": "^0.1.1",
     "express": "^4.17.1",
     "express-flash-messages": "^0.1.1",
-    "express-handlebars": "^3.1.0",
+    "express-handlebars": "^5.3.1",
     "express-redirect": "^1.2.2",
     "express-router": "0.0.1",
     "express-session": "^1.17.0",
